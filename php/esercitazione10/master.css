@@ -1,0 +1,21 @@
+button {
+  width: 100%;
+  padding: 0px 10px;
+}
+
+table {
+  border: solid 1px;
+  background-color: #ffff00;
+}
+
+td {
+ border-spacing: 10px 0px;
+}
+
+.row {
+  display: block;
+}
+
+tfoot {
+  color: #808080;
+}
