@@ -1,0 +1,32 @@
+# Esercitazione 2
+
+
+
+1)	Realizzare il documento index01.php che implementa un progetto PHP il
+quale crea e mostra nella pagina WEB un numero casuale sentinella e che
+successivamente crea e mostra nella pagina infiniti numeri casuali fino
+a quando non si siano contati 10 numeri maggiori del valore sentinella.
+A questo punto si calcola la media (di tutti i valori prodotti) con un
+operatore di autoassegnazione e si stampa a video il questo valore.
+Tutti gli output saranno mostrati come di seguito indicato.
+Il valore sentinella in un paragrafo; tutti i valori casuali in un paragrafo;
+la media finale in un paragrafo.
+All’interno del secondo paragrafo i numeri inferiori
+al valore sentinella saranno stampati normalmente (quindi in nero) e
+gli altri invece in rosso.
+
+
+
+
+
+
+
+2)	Realizzare il documento index02.php che produce e stampa una tabella con 40 valori casuali a tre cifre. Ad ogni esecuzione la tabella verrà stampata
+in una a caso tra le forme possibili (2 righe e 20 colonne, 4 righe e 10 colonne, 5 righe e 8 colonne, 8 righe e 5 colonne, 10 righe e 4 colonne, 20 righe
+e 2 colonne).
+
+3)	Realizzare nuovamente l’esercizio index02.php come index03.php facendo in modo che i valori presentati in output non siano più dei numeri
+casuali a tre cifre ma caratteri alfabetici a caso. Le lettere verranno stampate di colori diversi in accordo con il seguente schema. Vocali in rosso.
+Le lettere “straniere” (k, j, x, y, w) in verde. Le lettere con due suoni (c e g) in blu. Realizzare l’esercizio senza usare i vettori.
+4)	Realizzare nuovamente l’esercizio index02.php come index04.php facendo in modo che i valori presentati in output siano solo 1, X e 2. Si tenga conto però che il
+valore 1 deve avere il 45% di probabilità, il carattere X deve avere il 35% di probabilità e il carattere 2 deve avere il 20%. 
