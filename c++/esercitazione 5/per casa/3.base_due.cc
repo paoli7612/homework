@@ -14,8 +14,8 @@ int main()
     cout << "Inserisci un numero intero: ";
     cin >> n;
 
+    cout << (n-(n-(n%2)))%8;
     cout << (n-(n%2))%4;
-
     cout << n%2;
 
     /* REVERSE
