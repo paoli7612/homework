@@ -28,6 +28,10 @@ int main()
 {
     int n;
 
+    int max = -1u;
+    int min = max + 1;
+    cout << max;
+
     cout << "Inserisci un numero intero" << endl;
     cin >> n;
 
