@@ -31,7 +31,7 @@ Processo* cerca(pid p){
 pid chiedi_pid(int n=-1){
     pid a;
     do {
-        cout << "Inserisci il pid (intero tra 0 e " << sistema.N;
+        cout << "Inserisci il pid (intero tra 0 e " << sistema.N-1;
         if (n != -1)
             cout << ", non " << n;
         cout << "): ";
@@ -88,6 +88,9 @@ void crea_sincronizzazione(int p1, int p2){
 
     if (b->stato != fallito && a->sinc == NO_SINC)
         a->sinc = b->p;
+    else{
+        cout << "Impossibile completare l'operazione" << endl;
+    }
 }
 
 void imposta_fallito(int p){
@@ -143,11 +146,15 @@ int main(int argc, char** argv){
             cout << "Processo con cui sincronizzare" << endl;
             b = chiedi_pid(a);
             crea_sincronizzazione(a, b);
-
             break;
         case 6: // imposta fallito
+            pid c;
+            cout << "Processo da rendere \"fallito\"" << endl;
+            c = chiedi_pid();
+            imposta_fallito(c);
             break;
         case 7: // esci
+            running = false;
             break;
         default:
             cout << "\t_ scelta non valida _" << endl;;
