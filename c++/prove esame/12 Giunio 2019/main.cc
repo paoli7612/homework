@@ -5,14 +5,13 @@
 
 using namespace std;
 
-enum Stato{fallito, funzionante};
 const char filename[] = "data.txt";
-typedef unsigned int pid;
+typedef int Pid;
 
 struct Processo {
-    pid p = 0;
-    Stato stato = funzionante;
-    int sinc = NO_SINC;
+    Pid pid = 0;
+    bool stato = true;
+    Pid sinc = NO_SINC;
 };
 
 struct Sistema {
@@ -21,30 +20,30 @@ struct Sistema {
     bool init = false;
 } sistema;
 
-Processo* cerca(pid p){
+Processo* cerca(Pid p){
     for (int i=0; i<sistema.N; i++)
-        if (p == sistema.processi[i].p)
+        if (p == sistema.processi[i].pid)
             return &sistema.processi[i];
     return &sistema.processi[0];
 }
 
-pid chiedi_pid(int n=-1){
-    pid a;
+Pid chiedi_pid(int n=-1){
+    Pid pid;
     do {
         cout << "Inserisci il pid (intero tra 0 e " << sistema.N-1;
         if (n != -1)
             cout << ", non " << n;
         cout << "): ";
-        cin >> a;
-    } while (a<0 || a>=sistema.N || a == n);
-    return a;
+        cin >> pid;
+    } while (pid<0 || pid>=sistema.N || pid == n);
+    return pid;
 }
 
 void inizializza(int n){
     sistema.N = n;
     sistema.processi = new Processo[n];
     for (int i=0; i<n; i++)
-        sistema.processi[i].p = i;
+        sistema.processi[i].pid = i;
     sistema.init = true;
 }
 
@@ -52,8 +51,8 @@ void stampa_insieme(){
     for (int i=0; i<sistema.N; i++){
         Processo* p = &sistema.processi[i];
         
-        cout << p->p << "\t";
-        if (p->stato == funzionante)
+        cout << p->pid << "\t";
+        if (p->stato)
             cout << "funzionante"; 
         else
             cout << "fallito ";
@@ -73,21 +72,36 @@ void salva_insieme(){
 
     for (int i=0; i<sistema.N; i++){
         Processo* p = &sistema.processi[i];
-        file << p->p << " " << p->stato << " " << p->sinc << endl;
+        file << p->pid << " " << p->stato << " " << p->sinc << endl;
     }
 
     file.close();
 }
 
 void carica_insieme(){
+    ifstream file(filename);
+    int n;
+    file >> n;
+    inizializza(n);
+
+    for (int i=0; i<n; i++){
+        Pid pid, sinc;
+        bool stato;
+        file >> pid >> stato >> sinc;
+        Processo *p = &sistema.processi[i];
+        p->stato = stato;
+        p->sinc = sinc;
+    }
+
+    file.close();
 }
 
-void crea_sincronizzazione(int p1, int p2){
+void crea_sincronizzazione(Pid p1, Pid p2){
     Processo* a = cerca(p1);
     Processo* b = cerca(p2);
 
-    if (b->stato != fallito && a->sinc == NO_SINC)
-        a->sinc = b->p;
+    if (b->stato && a->sinc == NO_SINC)
+        a->sinc = b->pid;
     else{
         cout << "Impossibile completare l'operazione" << endl;
     }
@@ -95,7 +109,7 @@ void crea_sincronizzazione(int p1, int p2){
 
 void imposta_fallito(int p){
     Processo* a = cerca(p);
-    a->stato = fallito;
+    a->stato = false;
 }
 
 int main(int argc, char** argv){
@@ -140,7 +154,7 @@ int main(int argc, char** argv){
             carica_insieme();
             break;
         case 5: // sincronizza
-            pid a, b;
+            Pid a, b;
             cout << "Processo da sincronizzare" << endl;
             a = chiedi_pid();
             cout << "Processo con cui sincronizzare" << endl;
@@ -148,7 +162,7 @@ int main(int argc, char** argv){
             crea_sincronizzazione(a, b);
             break;
         case 6: // imposta fallito
-            pid c;
+            Pid c;
             cout << "Processo da rendere \"fallito\"" << endl;
             c = chiedi_pid();
             imposta_fallito(c);
