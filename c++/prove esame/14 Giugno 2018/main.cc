@@ -91,6 +91,11 @@ int main(int argc, char** argv){
 		int scelta;
 		cin>>scelta;
 
+		if (scelta > 1 && scelta < 7 && !dipendenze.init && scelta != 4){
+            cout << "Insieme non inizializato" << endl;
+            continue;
+        }
+
 		switch (scelta) {
 			case 1: // inizializza
 				int n;

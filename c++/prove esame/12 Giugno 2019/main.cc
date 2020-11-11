@@ -128,6 +128,11 @@ int main(int argc, char** argv){
         
         cin >> scelta;
 
+        if (scelta > 1 && scelta < 7 && !sistema.init && scelta != 4){
+            cout << "Insieme non inizializato" << endl;
+            continue;
+        }
+
         switch (scelta)
         {
         case 1: // inizializza
