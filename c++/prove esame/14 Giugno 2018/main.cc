@@ -47,6 +47,15 @@ void inizializza(int n){
 void imposta_dipendenza(Nome nome1, Nome nome2){
 	Pacchetto *a = cerca(nome1);
 	Pacchetto *b = cerca(nome2);
+	
+	Pacchetto *t = b;
+	do {
+		if (nome1 == t->nome){
+			cout << "Si creerebbe un loop" << endl;
+			return;
+		}
+		t = t->dipendente;
+	} while (t != NULL);
 	a->dipendente = b;
 }
 
