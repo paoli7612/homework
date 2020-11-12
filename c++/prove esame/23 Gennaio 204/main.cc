@@ -45,7 +45,7 @@ struct Prodotto {
 struct Magazzino {
     Prodotto prodotti[N];
     int T = 0;
-} magazzino;
+};
 
 /* Legge da stdin, e ritorna, il codice di un prodotto e la posizione in cui
 va collocato tale prodotto nel magazzino (questa funzionalità si limita a leggere e ritornare tali
@@ -62,10 +62,11 @@ void leggi_codice_posizione(){
 
 /*Inserisce il prodotto di codice cod nella posizione pos nel
 magazzino*/
-void inserisci_prodotto(Codice codice, Pos pos){
-    int n = magazzino.T++;
-    magazzino.prodotti[n].codice = codice;
-    magazzino.prodotti[n].posizione = pos;
+void inserisci_prodotto(Magazzino &m, Codice codice, Pos pos){
+    int n = m.T++;
+    m.prodotti[n].codice = codice;
+    m.prodotti[n].posizione = pos;
+    cout << "Inserito" << endl;
 }
 
 /* Stampa codice e posizione di tutti i prodotti contenuti nel magazzino. Si
@@ -81,21 +82,25 @@ void stampa_prodotto(Prodotto p){
     stampa_posizione(p.posizione);
     cout << endl;
 }
-void stampa_prodotti(){
-    for (int i=0; i<magazzino.T; i++)
-        stampa_prodotto(magazzino.prodotti[i]);
+void stampa_prodotti(Magazzino m){
+    for (int i=0; i<m.T; i++)
+        stampa_prodotto(m.prodotti[i]);
 }
 
 /* Elimina tutti i prodotti di codice cod */
-void elimina_codice_prodotto(Codice codice){
-    for (int i=0; i<magazzino.T; i++){
-        Prodotto* p = &magazzino.prodotti[i];
-        if (equals(p->codice, codice)){
-            // Elimina prodotto
-            cout << "Elimina prodotto" << endl;
+void elimina_codice_prodotto(Magazzino &m, Codice codice){
+    Magazzino da_tenere;
+
+    for (int i=0; i<m.T; i++){
+        Prodotto* p = &m.prodotti[i];
+        if (!equals(p->codice, codice)){
+            inserisci_prodotto(da_tenere, p->codice, p->posizione);
         }
     }
 
+    m.T = da_tenere.T;
+    for (int i=0; i<m.T; i++)
+        m.prodotti[i] = da_tenere.prodotti[i];
 }
 /* Salva il contenuto del magazzino in un file di testo */
 void salva_prodotti(){
@@ -109,6 +114,8 @@ void carica_prodotti(){
 
 
 int main(int argc, char** argv){
+    Magazzino magazzino;
+
     const char menu[] = 
         "1. Leggi codice promozione\n"
         "2. Inserisci prodotto\n"
@@ -134,12 +141,12 @@ int main(int argc, char** argv){
                 codice = ask_codice();
                 posizione.scaffale = ask("Scaffale");
                 posizione.ripiano = ask("Ripiano");
-                inserisci_prodotto(codice, posizione);
+                inserisci_prodotto(magazzino, codice, posizione);
                 break;
             case 2: // Inserisci prodotto       
                 break;
             case 3: // Stampa prodotti
-                stampa_prodotti();
+                stampa_prodotti(magazzino);
                 break;
             case 4: // Salva prodotti
                 break;
@@ -147,7 +154,7 @@ int main(int argc, char** argv){
                 break;
             case 6: // Elimina codice prodotto
                 codice = ask_codice();
-                elimina_codice_prodotto(codice); 
+                elimina_codice_prodotto(magazzino, codice); 
                 break;
             case 7: // Esci
                 running = false;
