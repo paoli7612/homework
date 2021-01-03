@@ -1,166 +1,185 @@
+// 11 settembre 20012
+
 #include <iostream>
 #include <fstream>
 
 using namespace std;
 
-const int MAX_NUM = 10; 
-const int MAX_SEQ = 5;  
+const int MAX_SEQUENZE = 10;
+const int MAX_SEQUENZA = 10;
+
 const char FILENAME[] = "data.dat";
 
-struct Sequenza {
-    int vettore[MAX_NUM];
-    int N;	
+struct sequenze_t {
+	int mat[MAX_SEQUENZE][MAX_SEQUENZA+1];
+	int sequenze = 0;	
 };
 
-struct Insieme {
-    Sequenza sequenze[MAX_SEQ];
-    int num_seq = 0;		
-};
-
-void ask_seq(Sequenza &s) {
-	int i;
-	cout << "Quanti numeri vuoi inserire in questa Sequenza? ->";
-	cin >> i;
-
-	for (int n=0; n<i; n++){
-		cout << n+1 << ": ";
-		cin >> s.vettore[n];
-	}
-
-    s.N = i;
+void aggiungi_sequenza(sequenze_t &s, int* sequ, int len){
+	s.mat[s.sequenze][0] = len;
+	for (int i=1; i<=len; i++)
+		s.mat[s.sequenze][i] = sequ[i-1];
+	s.sequenze++;
 }
 
-void aggiungi_sequenza(Insieme &insieme, Sequenza &s) {
-    if (insieme.num_seq == MAX_SEQ)
-		throw 1;
-    for (int i = 0 ; i < s.N ; i++)
-		insieme.sequenze[insieme.num_seq].vettore[i] = s.vettore[i];
-    insieme.sequenze[insieme.num_seq].N = s.N;
-    insieme.num_seq++;
-}
-
-void stampa_insieme(const Insieme &ins) {
-    for (int i = 0 ; i < ins.num_seq ; i++) {
-		for (int j = 0 ; j < ins.sequenze[i].N ; j++)
-			cout << ins.sequenze[i].vettore[j] << " ";
+void stampa_insieme(sequenze_t s){
+	cout << endl;
+	for (int a=0; a<s.sequenze; a++){
+		for (int i=1; i<=s.mat[a][0]; i++)
+			cout << s.mat[a][i] << " ";
 		cout << endl;
-    }
-    cout << endl;
+	}
+	cout << endl;
 }
 
-void salva_insieme(const Insieme &ins) {
-    ofstream f(FILENAME);
-    f.write((char*)&ins, sizeof(ins));
-	f.close();
+void ask_sequenza(sequenze_t &s){
+	if (s.sequenze == MAX_SEQUENZE){
+		cout << "Massimo numero sequenze raggiunto" << endl;
+		return;
+	}
+	int len;
+	cout << "Lunghezza sequenza: ";
+	cin >> len;
+	if (len < 1 || len > MAX_SEQUENZA){
+		cout << "Lunghezza sequenza non valida" << endl;
+		return;
+	}
+	int* seq = new int[len];
+	for (int a=0; a<len; a++){
+		cout << "Numero " << a+1 << ": ";
+		cin >> seq[a];
+	}
+	aggiungi_sequenza(s, seq, len);
 }
 
-void carica_insieme(Insieme &insieme) {
-    ifstream f(FILENAME);
-    f.read((char*)&insieme, sizeof(insieme));
-	f.close();	
+void save(sequenze_t &s){
+	ofstream file(FILENAME);
+	
+	const int SIZE = sizeof(int);
+	cout << endl << "SEQUENZE: " << s.sequenze << endl;
+	file.write((char*)&s.sequenze, SIZE);
+	for (int i=0; i<s.sequenze; i++){
+		file.write((char*)&s.mat[i][0], SIZE);
+		for (int j=1; j<=s.mat[i][0]; j++){
+			file.write((char*)&s.mat[i][j], SIZE);
+		}
+	}
+	
+	file.close();
 }
 
-void elimina_ultima_Sequenza(Insieme &insieme){
-	int l = insieme.sequenze[insieme.num_seq].N;
-	cout << "l: " << l << endl;
-	bool del = false;
-	for (int i=0; i<l-1; i++){
-		del = (insieme.sequenze[i].N < l);
-		if (del){
-			insieme.num_seq--;
+void load(sequenze_t &s){
+	ifstream file(FILENAME);
+	
+	const int SIZE = sizeof(int);
+	int sequenze;
+	file.read((char*)&sequenze, SIZE);
+
+	for (int i=0; i<sequenze; i++){
+		int len;
+		file.read((char*)&len, SIZE);
+		int* seq = new int[len];
+		for (int j=0; j<len; j++){
+			file.read((char*)&seq[j], SIZE);
+		}
+		aggiungi_sequenza(s, seq, len);
+	}
+	
+	
+	file.close();	
+}
+
+void elimina_ultima_sequenze(sequenze_t &s){
+	// ELIMINA ULTIMA SEQUENZE se è più lunga di almeno una delle altre sequenze
+	int i, len = s.mat[s.sequenze-1][0];
+	for (i=0; i<s.sequenze-1; i++){
+		if (s.mat[i][0] < len){
+			s.sequenze--;
 			break;
 		}
 	}
 }
 
-bool presente(const Insieme &ins, int elem) {
-    if (ins.num_seq == 1)
-	return true;
-
-    for (int i = 1 ; i < ins.num_seq ; i++) {
-	int j;
-	for (j = 0 ; j < ins.sequenze[i].N ; j++)
-	    if (ins.sequenze[i].vettore[j] == elem)
-		break;
-	if (j == ins.sequenze[i].N)
-	    return false;
-    }
-    return true;
-}
-
-bool aggiungi_sequenza_intersezione(Insieme &insieme) {
-    if (insieme.num_seq == 0 || insieme.num_seq == MAX_SEQ)
-	return false;
-    int N_inters = 0;
-    for (int i = 0 ; i < insieme.sequenze[0].N ; i++)
-		if (presente(insieme, insieme.sequenze[0].vettore[i])) {
-			insieme.sequenze[insieme.num_seq].vettore[N_inters] =
-			insieme.sequenze[0].vettore[i];
-			N_inters++;
-		}
-	if (N_inters > 0) {
-		insieme.sequenze[insieme.num_seq].N = N_inters;
-		insieme.num_seq++;
-	} else
-		return false;
-
-    return true;
-}
-
-int main()
-{
-    Insieme insieme;
-	Sequenza seq;
-
-
-    char menu[] =
-		"1. Aggiungi Sequenza all'insieme\n"
-		"2. Stampa Insieme delle sequenze\n"
-		"3. Salva Insieme delle sequenze\n"
-		"4. Carica Insieme delle sequenze\n"
-		"5. Elimina ultima sequenza\n"
-		"6. Aggiungi Sequenza intersezione all'insieme\n"
-		"7. Esci\n";
-
-	bool running = true;
-    while(running){
-		cout << menu << endl;
-
-		int scelta;
-		cin >> scelta;
-		switch(scelta) {
-			case 1: // Aggiungi Sequenza all'insieme
-				ask_seq(seq);
-				try {
-					aggiungi_sequenza(insieme, seq);
-				} catch (int e){
-					cout << "Insieme pieno" << endl;
+void aggiungi_intersezione(sequenze_t &s){
+	if (s.sequenze == 0){
+		cout << "Non sono presenti sequenze" << endl;
+		return;
+	}
+	int len_max = s.mat[0][0];
+	
+	int** seq = new int*[len_max];
+	for (int i=0; i<len_max; i++){
+		seq[i] = new int[2];
+		seq[i][0] = s.mat[0][i+1];
+	}
+	
+	for (int i=1; i<s.sequenze; i++){ // per ogni sequenza indice i
+		for (int n=0; n<s.mat[i][0]; n++){ // per ogni numero indice n+1
+			for (int j=0; j<len_max; j++){ // per ogni numero della prima sequenza indice j
+				if (s.mat[i][n+1] == seq[j][0]){ // se quel numero è compreso nella prima sequenza
+					seq[j][1]++;
+					
 				}
-				break;
-			case 2: // Stampa Insieme delle sequenze
-				stampa_insieme(insieme);
-				break;
-			case 3: // Salva Insieme delle sequenze
-				salva_insieme(insieme);
-				break;
-			case 4: // Carica Insieme delle sequenze
-				carica_insieme(insieme);
-				break;
-			case 5: // Elimina ultima sequenza
-				try {
-					elimina_ultima_Sequenza(insieme);
-				} catch (int e){
-					cout << "Insieme privo di sequenze" << endl;
-				}
-				break;
-			case 6: // Aggiungi sequenza intersezione all'insieme
-				aggiungi_sequenza_intersezione(insieme);
-				break;
-			case 7: // Esci
-				running = false;
-				break;
-			default:
-				cout<<"Scelta errata"<<endl;
+			}
 		}
 	}
+	
+	int* fin = new int[len_max];
+	int l = 0;
+	for (int i=0; i<len_max; i++){
+		if (seq[i][1] == s.sequenze-1)
+			fin[l++] = seq[i][0];
+	}
+	aggiungi_sequenza(s, fin, l);
+	cout << endl;
+	
+}
+
+int main(){
+	sequenze_t s;
+	const char menu[] = 
+		"1. Aggiungi sequenza\n"
+		"2. Stampa sequenze\n"
+		"3. Salva\n"
+		"4. Carica\n"
+		"5. Elimina ultima sequenza\n"
+		"6. Aggiungi intersezione\n"
+		"7. Esci";
+		
+		
+	bool run = true;
+	while (run){
+		int scelta;
+		cout << menu << endl;
+		cin >> scelta;
+		
+		switch(scelta){
+			case 1: // AGGIUNGI SEQUENZE
+				ask_sequenza(s);
+				break;
+			case 2: // STAMPA SEQUENZE
+				stampa_insieme(s);
+				break;
+			case 3: // SALVA
+				save(s);
+				break;
+			case 4: // CARICA
+				load(s);
+				break;
+			case 5: // ELIMINA ULTIMA SEQUENZE
+				elimina_ultima_sequenze(s);
+				break;
+			case 6: // AGGIUNGI INTERSEZIONE
+				aggiungi_intersezione(s);
+				break;
+			case 7: // ESCI
+				run = false;
+				break;
+			default:
+				cout << "Scelta non valida" << endl;
+		}
+		
+	}
+		
+	return 0;
 }
