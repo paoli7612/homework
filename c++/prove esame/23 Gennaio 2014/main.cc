@@ -3,118 +3,7 @@
 
 using namespace std;
 
-const int N = 10;
-const int M = 30;
-
-typedef char* Codice;
-
-bool equals(Codice a, Codice b){
-    if (strlen(a) != strlen(b))
-        return false;
-    for (int i=0; i<strlen(a); i++)
-        if (a[i] != b[i])
-            return false;
-    return true;
-}
-
-int ask(const char text[]){
-    cout << text << ": ";
-    int a;
-    cin >> a;
-    return a;
-}
-
-char* ask_codice(){
-    cout << "Codice: ";
-    Codice codice = new char[M];
-    cin >> codice;
-    codice[strlen(codice)] = '-';
-    return codice;
-}
-
-struct Pos {
-    int scaffale;
-    int ripiano;
-};
-
-struct Prodotto {
-    Pos posizione;
-    Codice codice;
-};
-
-struct Magazzino {
-    Prodotto prodotti[N];
-    int T = 0;
-};
-
-/* Legge da stdin, e ritorna, il codice di un prodotto e la posizione in cui
-va collocato tale prodotto nel magazzino (questa funzionalità si limita a leggere e ritornare tali
-informazioni, e non inserisce il prodotto nel magazzino, operazione di cui si occupa invece la
-prossima funzionalità). Il codice del prodotto ritornato deve essere memorizzato in array di
-caratteri delle dimensioni minime necessarie per contenere tale codice. La funzione deve
-occuparsi di controllare anche che l'utente non inserisca un codice più lungo di M caratteri. Nel
-caso in cui l'utente inserisca più di M caratteri, può tornare utile la funzione di svuotamento
-dello stdin di tutti i caratteri successivi fino al newline (fornita col frammento di codice), per
-eliminare i caratteri in eccesso ed evitare condizioni di errore. */
-void leggi_codice_posizione(){
-
-}
-
-/*Inserisce il prodotto di codice cod nella posizione pos nel
-magazzino*/
-void inserisci_prodotto(Magazzino &m, Codice codice, Pos pos){
-    int n = m.T++;
-    m.prodotti[n].codice = codice;
-    m.prodotti[n].posizione = pos;
-    cout << "Inserito" << endl;
-}
-
-/* Stampa codice e posizione di tutti i prodotti contenuti nel magazzino. Si
-ottiene il punteggio massimo se si riesce a stampare le informazioni col seguente formato
-(notare l'allineamento della seconda colonna)
-dga27- 56,12
-y2r6sw- 1,78 */
-void stampa_posizione(Pos p){
-    cout << "(" << p.ripiano << "," << p.scaffale << ")";
-}
-void stampa_prodotto(Prodotto p){
-    cout << p.codice << " ";
-    stampa_posizione(p.posizione);
-    cout << endl;
-}
-void stampa_prodotti(Magazzino m){
-    for (int i=0; i<m.T; i++)
-        stampa_prodotto(m.prodotti[i]);
-}
-
-/* Elimina tutti i prodotti di codice cod */
-void elimina_codice_prodotto(Magazzino &m, Codice codice){
-    Magazzino da_tenere;
-
-    for (int i=0; i<m.T; i++){
-        Prodotto* p = &m.prodotti[i];
-        if (!equals(p->codice, codice)){
-            inserisci_prodotto(da_tenere, p->codice, p->posizione);
-        }
-    }
-
-    m.T = da_tenere.T;
-    for (int i=0; i<m.T; i++)
-        m.prodotti[i] = da_tenere.prodotti[i];
-}
-/* Salva il contenuto del magazzino in un file di testo */
-void salva_prodotti(){
-
-}
-
-/* Carica il contenuto del magazzino dal file. Il precedente contenuto è perso */
-void carica_prodotti(){
-
-}
-
-
 int main(int argc, char** argv){
-    Magazzino magazzino;
 
     const char menu[] = 
         "1. Leggi codice promozione\n"
@@ -138,26 +27,18 @@ int main(int argc, char** argv){
 
         switch (scelta){
             case 1: // Leggi codice posizione
-                codice = ask_codice();
-                posizione.scaffale = ask("Scaffale");
-                posizione.ripiano = ask("Ripiano");
-                inserisci_prodotto(magazzino, codice, posizione);
                 break;
             case 2: // Inserisci prodotto       
                 break;
             case 3: // Stampa prodotti
-                stampa_prodotti(magazzino);
                 break;
             case 4: // Salva prodotti
                 break;
             case 5: // Carica prodotti
                 break;
             case 6: // Elimina codice prodotto
-                codice = ask_codice();
-                elimina_codice_prodotto(magazzino, codice); 
                 break;
             case 7: // Esci
-                running = false;
                 break;
         }
 
