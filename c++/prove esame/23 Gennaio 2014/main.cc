@@ -3,6 +3,14 @@
 
 using namespace std;
 
+const int N = 30; // max prodotti nel magazzino
+const int M = 12; // max caratteri codice prodotto
+
+struct prodotto_t{
+	unsigned int scaffale, ripiano;
+	char codice[30];
+};
+
 int main(int argc, char** argv){
 
     const char menu[] = 
