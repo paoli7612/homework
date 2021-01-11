@@ -3,133 +3,184 @@
 
 using namespace std;
 
-const int W = 3, H = 3; // Width, Height crucipuzzle
-const int M = 10; // Numero massimo di parole da trovare
+const int SIZE = 3;
+const int M = 5;
+const int L = 10; 
+
+const char FILENAME[] = "partita.txt";
 
 enum direzione {VERTICALE, ORIZZONTALE, DIAGONALE};
-struct pos_t {
-	int x, y;
-};
+struct pos_t { int x, y; };
 
-struct crucipuzzle_t {
-	char mat[H][W];
-	char **parole;
+struct partita_t {
+	char mat[SIZE][SIZE];
 	int n_parole;
+	char parole[M][L];
 };
 
-void initializza(struct crucipuzzle_t &c){
-	c.n_parole = 0;
-	for (int x=0; x<W; x++)
-		for (int y=0; y<H; y++)
-			c.mat[y][x] = 'a';
-	// Prima di fare nuova partita o caricare dal file faremmo il delete
-	c.parole = new char*[0];
+void inizializza(struct partita_t &p){
+	for (int y=0; y<SIZE; y++)
+		for (int x=0; x<SIZE; x++)
+			p.mat[y][x] = 'a';
+	p.n_parole = 0;
 }
 
-void nuova_partita(struct crucipuzzle_t &c){
-	
-	delete [] c.parole;
-	
-	//Legge da stdin il contenuto della matrice
-	cout << "Inserisci il contenuto della matrice: ";
-	for (int x=0; x<W; x++)
-		for (int y=0; y<H; y++)
-			cin >> c.mat[y][x];
-	
-	//Numero parole
-	cout << "Inserisci il numero delle parole da trovare: ";
-	cin >> c.n_parole;
-	c.parole = new char*[c.n_parole];
-	
-	for (int i=0; i<c.n_parole; i++){
-		cout << "Inserisci la parola da trovare numero " << i+1 << ": ";
-		c.parole[i] = new char[M];
-		cin >> c.parole[i];
+void stampa(struct partita_t &p, ostream &os, bool isFile){
+	for (int y=0; y<SIZE; y++){
+		for (int x=0; x<SIZE; x++)
+			os << p.mat[y][x] << " ";
+		os << endl;
+	}
+	if (isFile)
+		os << p.n_parole << " ";
+	for (int i=0; i<p.n_parole; i++){
+		os << p.parole[i] << " ";
 	}
 }
 
-// Stampa matrice e parole da trovare
-void stampa_partita(const struct crucipuzzle_t &c, ostream &os){
-	for (int x=0; x<W; x++){
-		for (int y=0; y<H; y++)
-			os << c.mat[y][x] << " ";
-		cout << endl;
+void carica(struct partita_t &p, istream &is, bool isFile){
+	// MATRICE
+	if (!isFile)
+		cout << "Inserisci le " << SIZE*SIZE << " caselle della matrice: ";
+	for (int y=0; y<SIZE; y++)
+		for (int x=0; x<SIZE; x++)
+			is >> p.mat[y][x];
+	
+	// N_PAROLE
+	if (!isFile)
+		cout << "numero parole da cercare: ";
+	is >> p.n_parole;
+	
+	// PAROLE
+	for (int i=0; i<p.n_parole; i++){
+		if (!isFile)
+			cout << "Inserisci la parola numero " << i+1 << ": ";
+		is >> p.parole[i];
 	}
-	for (int i=0; i<c.n_parole; i++)
-		os << c.parole[i] << " ";
 }
 
-// Salva partita sul file data.txt
-void salva_partita(const struct crucipuzzle_t &c){
-	ofstream file("data.txt");
-	file << c.n_parole << " ";
-	stampa_partita(c, file);
+void nuova_partita(struct partita_t &p){
+	carica(p, cin, false);
+}
+
+void stampa_partita(struct partita_t &p){
+	stampa(p, cout, false);
+}
+
+void salva_partita(struct partita_t &p){
+	ofstream file(FILENAME);
+	stampa(p, file, true);
 	file.close();
 }
 
-// Carica partita dal file data.txt
-void carica_partita(struct crucipuzzle_t &c){
-	ifstream file("data.txt");
-	
-	file >> c.n_parole;
-	for (int x=0; x<W; x++)
-		for (int y=0; y<H; y++)
-			file >> c.mat[y][x];
-	
-	delete[] c.parole;
-	c.parole = new char*[c.n_parole];
-	
-	for (int i=0; i<c.n_parole; i++){
-		c.parole[i] = new char[M];
-		file >> c.parole[i];	
-	}
-		
-	
-	file.close();	
+void carica_partita(struct partita_t &p){
+	ifstream file(FILENAME);
+	carica(p, file, true);
+	file.close();
 }
 
-// Vero se le tue parole sono uguali
-bool equals(const char* p1, const char* p2){
-	for (int i=0; p1[i] != '\0'; i++)
+// Vero se le parole sono uguali
+bool equals(char* p1, char* p2){
+	int i;
+	for (i=0; p1[i]; i++)
 		if (p1[i] != p2[i])
 			return false;
-	return true;
+	return p1[i] == p2[i]; // cosi siamo sicuri che p2 non sia piu lunga
 }
 
-// Vero se la parola è ancora da trovare
-bool pdt(const struct crucipuzzle_t &c, char* par){
-	for (int i=0; i<c.n_parole; i++){
-		if (equals(c.parole[i], par))
-			return true;
-	}
-	return false;
+// Indice della parola se parola è una parola della partita p da trovare (-1 altrimenti)
+bool parola_in(struct partita_t &p, char* parola){
+	for (int i=0; i<p.n_parole; i++)
+		if (equals(parola, p.parole[i]))
+			return i;
+	return -1;
 }
 
-/*Se la parola par è una di quelle da trovare, si controlla se è
-presente nella matrice a partire dalla posizione pos e lungo la direzione dir, e se le cose stanno
-così si elimina tale parola dall'elenco delle parole da trovare e, se non ci sono più parole da
-trovare comunica l'avvenuta vittoria.*/
-bool trova_parola(struct crucipuzzle_t &c, char* par, pos_t pos, direzione dir){
-	if (!pdt(c, par))
-		return false;
+// Copia la parola 'copia' e la incolla nella parola 'incolla'
+void copia_incolla(char incolla[M], char copia[M]){
+	int i;
+	for (i=0; copia[i]; i++)
+		incolla[i] = copia[i];
+	incolla[i] = '\0'; // terminatore per sicurezza
+}
+
+// Rimuove la parola di indice i dalle parole da cercare
+void rimuovi_parola(struct partita_t &p, int i){
+	p.n_parole--;
+	for (int a=i; a<p.n_parole; a++)
+		copia_incolla(p.parole[a], p.parole[a+1]);
+}
+
+bool confronta_parola(struct partita_t &p, char* parola, pos_t pos, direzione dir){
 	
-	cout << "mat" << endl;
-	for (int i=0; par[i] != '\0'; i++) {
+	int i = parola_in(p, parola);
+	
+	// La parola non è da cercare
+	if (i == -1)
+		return false;
+		
+	
+	for (int i=0; parola[i]; i++){
 		switch(dir){
 			case VERTICALE:
-				if (par[i] != c.mat[pos.x][pos.y+1])
+				if (parola[i] != p.mat[pos.y+i][pos.x])
 					return false;
-				break;		
+				break;
+			case ORIZZONTALE:
+				if (parola[i] != p.mat[pos.y][pos.x+i])
+					return false;
+				break;
+			case DIAGONALE:
+				if (parola[i] != p.mat[pos.y+i][pos.x+i])
+					return false;
+				break;
 		}
 	}
 	
+	// Passiamo l'indice della parola da eliminare, che ci siamo calcolati prima
+	rimuovi_parola(p, i);
+		
 	return true;
+}
+
+void trova_parola(struct partita_t &p, char* par, pos_t pos, direzione dir){
+	confronta_parola(p, par, pos, dir);
 	
+	if (p.n_parole == 0)
+		cout << "Comunico la avvenuta vittoria" << endl;
+}
+
+void elenca_pos_parola(struct partita_t &p, char* par, direzione dir){
+	for (int i=0; par[i]; i++){
+		switch(dir){
+			case VERTICALE:
+				if (par[i] != p.mat[pos.y+i][pos.x])
+					return false;
+				break;
+			case ORIZZONTALE:
+				if (par[i] != p.mat[pos.y][pos.x+i])
+					return false;
+				break;
+			case DIAGONALE:
+				if (par[i] != p.mat[pos.y+i][pos.x+i])
+					return false;
+				break;
+		}
+	}
 }
 
 int main(){
-	crucipuzzle_t c;
-	initializza(c);
+	partita_t p;
+	inizializza(p);
+	carica_partita(p);
+	stampa_partita(p);
+	//salva_partita(p);
+	trova_parola(p, "tom", {1, 0}, VERTICALE);
+	stampa_partita(p);
+	trova_parola(p, "aaa", {0, 0}, VERTICALE);
+	stampa_partita(p);
+	trova_parola(p, "aoa", {0, 0}, DIAGONALE);
+	stampa_partita(p);
 	
     const char menu[] =
 		"\t1 Nuova partita\n"
@@ -141,54 +192,31 @@ int main(){
 		"\t7 Elenca posizioni parola\n"
 		"\t8 Uscita\n";
 
-
-	cout << VERTICALE << endl;
-
-	bool run = true;
-    while(run) {
+    while(true) {
 		cout<<endl<<menu<<endl ;
 		int scelta ;
 		cin>>scelta ;
 		switch(scelta) {
-			char* par;
-			int n;
-			pos_t pos;
-			direzione dir;
-			case 1: // Nuova partita
-				nuova_partita(c);
+			case 1:
 			    break ;
-			case 2: // Stampa partita
-				stampa_partita(c, cout);
+			case 2:
 			    break ;
-			case 3: // Salva partita
-				salva_partita(c);
+			case 3:
 			    break ;
-			case 4: // Carica partita
-				carica_partita(c);
+			case 4:
 			    break ;
-			case 5: // Confronta parola
-				cout << "Inserisci la parola: ";
-				par = new char[M];
-				cin >> par;
-				cout << "x posizione: "; cin >> pos.x;
-				cout << "y posizione: "; cin >> pos.y;
-				cout << "Direzione (0 Verticale, 1 Orizzontale, 2 Obliquo)";
-				cin >> n;
-				if (trova_parola(c, par, pos, (direzione)n))
-					cout << "Parola trovata" << endl;
-				else cout << "Parola non trovata" << endl;
+			case 5:
 			    break ;
 			case 6:
 			    break ;
 			case 7:
 			    break ;
 			case 8:
-			    run = false;
-			    break;
-			default:
-				cout << "Scelta errata" << endl;
+			    return 0 ;
 		}
-    }
+	}
 
-    return 0;
+    // non si dovrebbe mai arrivare qui
+    return 1 ;
 }
+
