@@ -215,6 +215,11 @@ void distribuzione_argomenti(const struct biblioteca_t &b, argomento arg){
 	}	
 }
 
+void libri_ripetuti(const struct biblioteca_t &b){
+	for (int s=0; s<b.N; s++)
+		for (int l=0; l<b.scaffali[s].N)
+}
+
 int main(){
 	
 	biblioteca_t b;
