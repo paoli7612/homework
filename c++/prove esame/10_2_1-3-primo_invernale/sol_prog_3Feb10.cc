@@ -54,8 +54,8 @@ void nuova_partita(crucipuzzle_t &p)
     }
 }
 
-// stampa/scrive su file la partita in corso
-void stampa_partita(const crucipuzzle_t &p, ostream &os, bool su_file)
+
+void stampa_partita(const crucipuzzle_t &p, ostream &os=cout, bool su_file=false)
 {
     for(int i = 0 ; i < N ; i++) {
 	for(int j = 0 ; j < N ; j++)
@@ -75,6 +75,8 @@ void stampa_partita(const crucipuzzle_t &p, ostream &os, bool su_file)
     }
 }
 
+
+
 // caricala partita da file
 void carica_partita(crucipuzzle_t &p, istream &is)
 {
@@ -86,7 +88,7 @@ void carica_partita(crucipuzzle_t &p, istream &is)
 	is>>p.parole[i] ;
 }
 
-// tipo di dato per rappresentare le possibili direzioni in cui può
+// tipo di dato per rappresentare le possibili direzioni in cui puï¿½
 // apparire una parola nella matrice
 enum dir_t {ORIZZONTALE, VERTICALE, DIAGONALE} ;
 
