@@ -7,12 +7,13 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    Utente u();
+    Utente u("Tommaso", "Paoli");
 
-
-    
-    
-
+    u.stampa();
 
     return 0;
 }
+
+
+
+
