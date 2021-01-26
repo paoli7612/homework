@@ -126,7 +126,7 @@ bool scrivi_stato(const code_t &c, ostream &os, bool su_file)
 		  <<c.code[i].prossimo_da_servire
 		  <<endl ;
 
-	return os ;
+	return (bool)os ;
 }
 
 // carica lo stato da file
@@ -149,7 +149,7 @@ bool carica_stato(code_t &c)
 		f>>c.code[i].ultimo_accodato ;
 	}
 
-	return f ;
+	return (bool)f ;
 }
 
 // reinizializza le code ed attiva la modalita' numeri limitati
