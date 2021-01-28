@@ -81,22 +81,36 @@ bool carica(crucipuzzle_t &crucipuzzle)
 
 bool confronta_parola(crucipuzzle_t &crucipuzzle, char par[GRANDEZZA_MATRICE], pos_t pos, dir_t dir)
 {
-	for (int i=0; i<GRANDEZZA_MATRICE; i++)
-		switch (dir)
-		{
-		case VERTICALE:
-			if (crucipuzzle.mat[pos.y+i][pos.x] != par[i])
-				return false;
-			break;
-		case ORIZZONTALE:
-			if (crucipuzzle.mat[pos.y][pos.x+1] != par[i])
-				return false;
-		case OBLIQUO:
-			if (crucipuzzle.mat[pos.y+i][pos.y+i] != par[i])
-				return false;
-		default:
-			break;
-		}
+	cout << "Trova: " << par << " - pos: " << pos.x << " " << pos.y << " - dir: " << dir << endl;
+
+	switch (dir)
+	{
+		case VERTICALE: {
+			for (int i=0; i<GRANDEZZA_MATRICE; i++)
+				if (crucipuzzle.mat[pos.y+i][pos.x] != par[i])
+					return false;
+			return true;
+		} break;
+		case ORIZZONTALE: {
+			for (int i=0; i<GRANDEZZA_MATRICE; i++)
+				if (crucipuzzle.mat[pos.y][pos.x+i] != par[i])
+					return false;
+			return true;
+		} break;
+		case OBLIQUO: {
+			for (int i=0; i<GRANDEZZA_MATRICE; i++)
+				if (crucipuzzle.mat[pos.y+i][pos.x+i] != par[i])
+					return false;
+			return true;
+		};
+	}
+	/*
+		Seppure era più "veloce da scrivere" un solo for con dentro uno switch
+		ho preferito questa scelta (switch con dentro tre for) in modo che ad ogni iterazione
+		non torno a controllare la direzione. La controllo una sola volta all'inizio e ciclo di conseguenza
+	*/
+
+	cout << endl;
 	return true;
 }
 
@@ -120,6 +134,7 @@ void str_copy(char a[GRANDEZZA_MATRICE], const char b[GRANDEZZA_MATRICE])
 
 bool trova_parola(crucipuzzle_t &crucipuzzle, char par[GRANDEZZA_MATRICE], pos_t pos, dir_t dir)
 {	
+	cout << "Trova: " << par << " - pos: " << pos.x << " " << pos.y << " - dir: " << dir << endl; 
 	bool trovata = false;
 	for (int i=0; i<crucipuzzle.n_parole; i++)
 	{
@@ -171,55 +186,55 @@ int main()
 	"\t8 Uscita\n";
 
     while(true) {
-	cout<<endl<<menu<<endl ;
-	int scelta ;
-	cin>>scelta ;
+	cout << endl << menu << endl;
+	int scelta;
+	cin >> scelta;
 	switch(scelta) {
-	case 1: // Nuova partita
-		nuova_partita(crucipuzzle, cin, false);
-	    break ;
-	case 2: // Stampa partita
-		stampa_partita(crucipuzzle, cout, false);
-	    break ;
-	case 3: // Salva partita
-		if (!salva(crucipuzzle))
-			cerr << "Salvataggio fallito" << endl;
-	    break ;
-	case 4: // Carica partita
-		if (!carica(crucipuzzle))
-			cerr << "Caricamento fallito" << endl;
-	    break ;
-	case 5: // Confronta parola
-	{
-		char par[GRANDEZZA_MATRICE];
-		pos_t pos;
-		dir_t dir;
-		chiedi(par, pos, dir);
+		case 1: // Nuova partita
+			nuova_partita(crucipuzzle, cin, false);
+			break ;
+		case 2: // Stampa partita
+			stampa_partita(crucipuzzle, cout, false);
+			break ;
+		case 3: // Salva partita
+			if (!salva(crucipuzzle))
+				cerr << "Salvataggio fallito" << endl;
+			break ;
+		case 4: // Carica partita
+			if (!carica(crucipuzzle))
+				cerr << "Caricamento fallito" << endl;
+			break ;
+		case 5: // Confronta parola
+		{
+			char par[GRANDEZZA_MATRICE];
+			pos_t pos;
+			dir_t dir;
+			chiedi(par, pos, dir);
 
-		if (confronta_parola(crucipuzzle, par, pos, dir))
-			cout << "Parola trovata" << endl;
-		else
-			cout << "Parola non trovata" << endl; 
-	}
-	    break ;
-	case 6: // Trova parola
-	{
-		char par[GRANDEZZA_MATRICE];
-		pos_t pos;
-		dir_t dir;
-		chiedi(par, pos, dir);
+			if (confronta_parola(crucipuzzle, par, pos, dir))
+				cout << "Parola trovata" << endl;
+			else
+				cout << "Parola non trovata" << endl; 
+		}
+			break;
+		case 6: // Trova parola
+		{
+			char par[GRANDEZZA_MATRICE];
+			pos_t pos;
+			dir_t dir;
+			chiedi(par, pos, dir);
 
-		if (confronta_parola(crucipuzzle, par, pos, dir))
-			cout << "Parola trovata" << endl;
-		else
-			cout << "Parola non trovata" << endl;
-	}
-	    break ;
-	case 7: // Elenca posizioni parola
-	    break ;
-	case 8: // Uscita
-	    return 0 ;
-	}
+			if (confronta_parola(crucipuzzle, par, pos, dir))
+				cout << "Parola trovata" << endl;
+			else
+				cout << "Parola non trovata" << endl;
+		}
+			break;
+		case 7: // Elenca posizioni parola
+			break;
+		case 8: // Uscita
+			return 0;
+		}
     }
 
     // non si dovrebbe mai arrivare qui
