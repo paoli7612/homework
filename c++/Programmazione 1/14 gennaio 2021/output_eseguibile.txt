@@ -1,0 +1,53 @@
+1. Reinizializza coda
+2. Accoda utente
+3. Stampa coda
+4. Salva coda
+5. Carica coda
+6. Servi prossimo utente
+7. Anticipa servizio
+8. Esci
+
+
+1. Reinizializza coda
+2. Accoda utente
+3. Stampa coda
+4. Salva coda
+5. Carica coda
+6. Servi prossimo utente
+7. Anticipa servizio
+8. Esci
+
+
+A J R 
+1. Reinizializza coda
+2. Accoda utente
+3. Stampa coda
+4. Salva coda
+5. Carica coda
+6. Servi prossimo utente
+7. Anticipa servizio
+8. Esci
+
+
+R J A 
+1. Reinizializza coda
+2. Accoda utente
+3. Stampa coda
+4. Salva coda
+5. Carica coda
+6. Servi prossimo utente
+7. Anticipa servizio
+8. Esci
+
+
+J A R 
+1. Reinizializza coda
+2. Accoda utente
+3. Stampa coda
+4. Salva coda
+5. Carica coda
+6. Servi prossimo utente
+7. Anticipa servizio
+8. Esci
+
+
