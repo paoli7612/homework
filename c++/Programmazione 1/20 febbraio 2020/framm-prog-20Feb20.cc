@@ -85,33 +85,65 @@ bool carica_testo(testo_t &testo)
 	return static_cast<bool>(file);
 }
 
-bool cerca_righe(const testo_t &testo, const int M)
+bool testo_in(const testo_t &a, const testo_t &b, bool senza_spazi)
 {
-	testo_t da_cercare;
-	inizializza(da_cercare);
-	inizializza_testo(da_cercare, M, cin);
-
-	for (int r=0; r<testo.n_righe; r++)
+	for (int r=0; r<a.n_righe-b.n_righe; r++)
 	{
 		bool trovate = true;
-		for (int c=0; c<M; c++)
+		for (int c=0; c<b.n_righe; c++)
 		{
+			int ac=0, bc=0;
 			for (int j=0; j<MAXLUN; j++){
-				if (testo.righe[r][j] == '\0' && da_cercare.righe[c][j] == '\0')
+				if (senza_spazi)
+				{
+					while (a.righe[r][ac] == ' ')
+						ac++;
+					while (b.righe[r][bc] == ' ')
+						bc++;
+				}
+				cout << a.righe[r][ac] << " " << b.righe[c][bc] << endl;
+				if (a.righe[r][ac] == '\0' && b.righe[c][bc] == '\0')
 					break;
-				if (testo.righe[r][j] != da_cercare.righe[c][j])
+				if (a.righe[r][ac++] != b.righe[c][bc++])
 				{
 					trovate = false;
 					break;
 				}
 			}
 			if (trovate)
-			{
-				cout << "Trovate" << endl;
 				return true;
-			}
 		}
-		
+	}
+
+	return false;
+}
+
+bool cerca_righe(const testo_t &testo, const int M)
+{
+	testo_t da_cercare;
+	inizializza(da_cercare);
+	inizializza_testo(da_cercare, M, cin);
+
+	if (testo_in(testo, da_cercare, false))
+	{
+		cout << "Trovate" << endl;
+		return true;
+	}
+
+	cout << "Non trovate" << endl;
+	return false;
+}
+
+
+bool cerca_righe2(const testo_t &testo, const int M){
+	testo_t da_cercare;
+	inizializza(da_cercare);
+	inizializza_testo(da_cercare, M, cin);
+
+	if (testo_in(testo, da_cercare, true))
+	{
+		cout << "Trovate" << endl;
+		return true;
 	}
 
 	cout << "Non trovate" << endl;
@@ -129,6 +161,7 @@ int main()
 	//salva_testo(testo);
 	stampa_testo(testo, cout, false);
 	cerca_righe(testo, 1);
+	cerca_righe2(testo, 1);
 	return 0;
 
 	const char menu[] =
