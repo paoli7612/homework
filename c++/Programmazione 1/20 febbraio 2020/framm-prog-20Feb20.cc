@@ -31,7 +31,7 @@ void inizializza(testo_t &testo)
 	testo.n_righe = -1;
 }
 
-bool inizializza_testo(testo_t &testo, int n_righe, istream &is)
+bool inizializza_testo(testo_t &testo, const int n_righe, istream &is)
 {
 	if (n_righe < 0)
 		return false;
@@ -50,7 +50,7 @@ bool inizializza_testo(testo_t &testo, int n_righe, istream &is)
 	return true;
 }
 
-void stampa_testo(const testo_t &testo, ostream &os, bool is_file)
+void stampa_testo(const testo_t &testo, ostream &os, const bool is_file)
 {
 	if (is_file)
 		os << testo.n_righe << endl;
@@ -85,6 +85,39 @@ bool carica_testo(testo_t &testo)
 	return static_cast<bool>(file);
 }
 
+bool cerca_righe(const testo_t &testo, const int M)
+{
+	testo_t da_cercare;
+	inizializza(da_cercare);
+	inizializza_testo(da_cercare, M, cin);
+
+	for (int r=0; r<testo.n_righe; r++)
+	{
+		bool trovate = true;
+		for (int c=0; c<M; c++)
+		{
+			for (int j=0; j<MAXLUN; j++){
+				if (testo.righe[r][j] == '\0' && da_cercare.righe[c][j] == '\0')
+					break;
+				if (testo.righe[r][j] != da_cercare.righe[c][j])
+				{
+					trovate = false;
+					break;
+				}
+			}
+			if (trovate)
+			{
+				cout << "Trovate" << endl;
+				return true;
+			}
+		}
+		
+	}
+
+	cout << "Non trovate" << endl;
+	return false;
+}
+
 
 int main()
 {
@@ -95,7 +128,7 @@ int main()
 
 	//salva_testo(testo);
 	stampa_testo(testo, cout, false);
-
+	cerca_righe(testo, 1);
 	return 0;
 
 	const char menu[] =
