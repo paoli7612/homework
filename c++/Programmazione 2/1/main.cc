@@ -6,7 +6,7 @@ using namespace std;
 
 #include "lista.h"
 
-void stampa_lista(lista_t &lista)
+void stampa_lista(list_t &lista)
 {
   cout << "[ ";
   print(lista);
@@ -15,7 +15,7 @@ void stampa_lista(lista_t &lista)
 
 int main(int argc, char **argv)
 {
-  lista_t lista = NULL;
+  list_t lista = NULL;
 
   for (int i=0; i<10; i++)
     insert(lista, rand()%10);

@@ -3,8 +3,8 @@ struct node_t {
   node_t *next;
 };
 
-typedef node_t *lista_t;
+typedef node_t *list_t;
 
-void print(lista_t &);
-void insert(lista_t &, int);
-void concat(lista_t &, lista_t &);
+void print(list_t &);
+void insert(list_t &, int);
+void concat(list_t &, list_t &);

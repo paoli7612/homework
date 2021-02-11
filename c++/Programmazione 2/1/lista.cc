@@ -2,16 +2,16 @@
 
 #include "lista.h"
 
-void print(lista_t &lista)
+void print(list_t &list)
 {
-  if (lista == NULL)
+  if (list == NULL)
     return;
 
-  std::cout << lista->value << " ";
-  print(lista->next);
+  std::cout << list->value << " ";
+  print(list->next);
 }
 
-void insert(lista_t &list, const int value)
+void insert(list_t &list, const int value)
 {
   if (list == NULL)
   {
@@ -23,7 +23,7 @@ void insert(lista_t &list, const int value)
     insert(list->next, value);
 }
 
-void concat(lista_t &a, list_t &b)
+void concat(list_t &a, list_t &b)
 {
   if (a == NULL)
     a = b;
