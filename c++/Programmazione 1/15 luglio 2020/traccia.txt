@@ -1,0 +1,11 @@
+2
+ La prova pratica
+	 Facile
+	 Difficile
+	 Noiosa
+0
+ I docenti sottovalutano
+	 Falso
+	 Solo un po vero
+	 Verissimo
+1
