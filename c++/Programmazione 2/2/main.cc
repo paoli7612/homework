@@ -10,6 +10,7 @@ int main(int argc, char **argv)
 {
   graph_t grafo;
   init(grafo, 10);
+  show(grafo);
 
   system("pause");
 
