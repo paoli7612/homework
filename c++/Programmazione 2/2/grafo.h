@@ -5,6 +5,8 @@ struct node_t {
 
 typedef node_t *list_t;
 
+void add(list_t &, const int n);
+
 struct graph_t {
   int *vertices;
   list_t *adj;
@@ -13,3 +15,4 @@ struct graph_t {
 
 void init(graph_t &, const int);
 void show(const graph_t &);
+void connect(graph_t &, const int, const int);
