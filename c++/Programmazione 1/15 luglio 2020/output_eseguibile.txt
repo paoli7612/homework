@@ -1,0 +1,32 @@
+1. Inizializza traccia
+2. Stampa traccia
+3. Salva traccia
+4. Carica traccia
+5. Fai domanda
+6. Fai domanda 2
+7. Esci
+
+
+indice risposta corretta: indice risposta corretta: 1. Inizializza traccia
+2. Stampa traccia
+3. Salva traccia
+4. Carica traccia
+5. Fai domanda
+6. Fai domanda 2
+7. Esci
+
+
+indice domanda i:  I docenti sottovalutano
+  a) 	 Falso
+  b) 	 Solo un po vero
+  c) 	 Verissimo
+Sbagliato
+1. Inizializza traccia
+2. Stampa traccia
+3. Salva traccia
+4. Carica traccia
+5. Fai domanda
+6. Fai domanda 2
+7. Esci
+
+
