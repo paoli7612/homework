@@ -1,9 +1,5 @@
 *.out
 *.exe
 .vscode*
-<<<<<<< HEAD
-*.class
-=======
 .class*
 .landscape*
->>>>>>> 05f47bd6198399c9d9b280f1c1fc3cd7e29063b5
