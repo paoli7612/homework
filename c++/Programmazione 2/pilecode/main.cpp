@@ -8,7 +8,7 @@ struct node_t {
 };
 
 typedef node_t* stack_t;
-typedef node_t* tail_t;
+typedef node_t* queue_t;
 
 void stampa(node_t *node)
 {
@@ -50,10 +50,10 @@ int pop(stack_t &stack)
 
 int main(int argc, char **argv)
 {
-    tail_t tail = new node_t{1, NULL};
+    queue_t queue = new node_t{1, NULL};
     stack_t stack = new node_t{2, NULL};
 
-    stampa(tail);
+    stampa(queue);
     stampa(stack);
 
     return 0;
