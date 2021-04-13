@@ -21,7 +21,32 @@ void stampa(node_t *node)
     stampa(node->next);
 }
 
+// is pila vuota?
+bool stack_empty(stack_t stack)
+{
+    return stack == NULL;
+}
 
+// inserisci nodo in cima
+stack_t push(stack_t stack, node_t *node)
+{
+    node->next = stack;
+    return stack;
+}
+
+// lettura valore in testa
+int top(stack_t stack)
+{
+    return stack->value;
+}
+
+// lettura ed estrazione valore in testa
+int pop(stack_t &stack)
+{
+    int value = stack->value;
+    stack = stack->next;
+    return value;
+}
 
 int main(int argc, char **argv)
 {
