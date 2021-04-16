@@ -27,6 +27,17 @@
 
         public function aggiungi($macchina)
         {
-
+            array_push($macchine, $macchina);
         }
     }
+
+    
+    $azienda = new Azienda([
+        new Auto(),
+        new Auto(),
+        new Auto()
+    ]);
+
+    var_dump($azienda);
+
+    
