@@ -1,19 +1,20 @@
-/*
- * main.cpp
- *
- *  Created on: 10 apr 2021
- *      Author: paoli7612
- */
+#include <iostream>
 
-#include "../include/liste.h"
+using namespace std;
+
 
 int main(int argc, char **argv) {
 
-	list_t lista = crea_lista(4);
+	int i = foo();
 
-	stampa_lista(lista);
-
+	cout << i << endl;
 
 	return 0;
 }
 
+
+int foo()
+{
+
+	return 1;
+}
