@@ -6,7 +6,7 @@
       return true;
     }
 
-    $n = $_GET['number']
+    $n = $_GET['number'];
     if (is_primo($n)){
       echo $n . "é primo";
     } else {
